@@ -41,7 +41,7 @@ export default class Keyboard extends PureComponent {
   constructor(props) {
     super(props);
     this.handleLetterButtonClick = this.handleLetterButtonClick.bind(this);
-    this.handleBackspaceClick = debounce(this.handleBackspaceClick, 300).bind(this)
+    this.handleBackspaceClick = debounce(this.handleBackspaceClick, 300).bind(this);
     this.clearInput = this.clearInput.bind(this);
     this.handleShiftClick = this.handleShiftClick.bind(this);
     this.handleSymbolsClick = this.handleSymbolsClick.bind(this);
