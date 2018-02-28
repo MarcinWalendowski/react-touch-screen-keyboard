@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable'; // The default
-import debounce from 'lodash/debounce'
+import throttle from 'lodash/throttle'
 import KeyboardButton from './KeyboardButton';
 
 import LatinLayout from './layouts/LatinLayout';
@@ -41,7 +41,7 @@ export default class Keyboard extends PureComponent {
   constructor(props) {
     super(props);
     this.handleLetterButtonClick = this.handleLetterButtonClick.bind(this);
-    this.handleBackspaceClick = debounce(this.handleBackspaceClick, 300).bind(this);
+    this.handleBackspaceClick = throttle(this.handleBackspaceClick, 300).bind(this);
     this.clearInput = this.clearInput.bind(this);
     this.handleShiftClick = this.handleShiftClick.bind(this);
     this.handleSymbolsClick = this.handleSymbolsClick.bind(this);
