@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "custom-event-polyfill": "^0.3.0",
+    "lodash": "^4.17.5",
     "react-draggable": "^3.0.3"
   }
 }

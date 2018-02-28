@@ -1,18 +1,20 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable'; // The default
-
+import debounce from 'lodash/debounce'
 import KeyboardButton from './KeyboardButton';
 
 import LatinLayout from './layouts/LatinLayout';
 import CyrillicLayout from './layouts/CyrillicLayout';
 import SymbolsLayout from './layouts/SymbolsLayout';
 import GermanLayout from './layouts/GermanLayout';
+import NorwegianLayout from './layouts/NorwegianLayout';
 
 import BackspaceIcon from './icons/BackspaceIcon';
 import LanguageIcon from './icons/LanguageIcon';
 import ShiftIcon from './icons/ShiftIcon';
 import DraggableIcon from './icons/DraggableIcon';
+import KeyboardBackspaceButton from './KeyboardBackspaceButton';
 
 export default class Keyboard extends PureComponent {
   static propTypes = {
@@ -39,7 +41,7 @@ export default class Keyboard extends PureComponent {
   constructor(props) {
     super(props);
     this.handleLetterButtonClick = this.handleLetterButtonClick.bind(this);
-    this.handleBackspaceClick = this.handleBackspaceClick.bind(this);
+    this.handleBackspaceClick = debounce(this.handleBackspaceClick, 300).bind(this)
     this.clearInput = this.clearInput.bind(this);
     this.handleShiftClick = this.handleShiftClick.bind(this);
     this.handleSymbolsClick = this.handleSymbolsClick.bind(this);
@@ -63,6 +65,8 @@ export default class Keyboard extends PureComponent {
       keysSet = GermanLayout;
     } else if (this.state.currentLanguage === 'ru') {
       keysSet = CyrillicLayout;
+    } else if (this.state.currentLanguage === 'no') {
+      keysSet = NorwegianLayout;
     } else if (this.state.currentLanguage) {
       keysSet = this.state.currentLanguage;
     } else {
@@ -90,7 +94,7 @@ export default class Keyboard extends PureComponent {
 
   handleLanguageClick() {
     this.setState({ currentLanguage: this.state.currentLanguage === this.props.defaultKeyboard
-      ? this.props.secondaryKeyboard : this.props.defaultKeyboard });
+        ? this.props.secondaryKeyboard : this.props.defaultKeyboard });
   }
 
   clearInput() {
@@ -200,6 +204,14 @@ export default class Keyboard extends PureComponent {
     inputNode.dispatchEvent(new CustomEvent('input'));
   }
 
+  longPressStart = () => {
+    console.log('press start');
+  };
+
+  longPressEnd = () => {
+    console.log('press end');
+  };
+
   render() {
     const { inputNode, secondaryKeyboard } = this.props;
     const keys = this.getKeys();
@@ -207,7 +219,7 @@ export default class Keyboard extends PureComponent {
     const symbolsKeyValue = this.getSymbolsKeyValue();
 
     return (
-      <Draggable 
+      <Draggable
         disabled={this.props.isDraggable === false}
         defaultPosition={{x: 0, y: 0}}
       >
@@ -224,20 +236,24 @@ export default class Keyboard extends PureComponent {
                 key={button}
               />,
             )}
-            <KeyboardButton
+            <KeyboardBackspaceButton
               value={<BackspaceIcon />}
               onClick={this.handleBackspaceClick}
+              longPressStart={this.longPressStart}
+              longPressEnd={this.longPressEnd}
+              pressCallback={this.handleBackspaceClick}
+              finite={false}
             />
           </div>
 
           {keys.map((row, i) =>
             <div key={`r${i}`} className="keyboard-row">
               {keys.length === i + 1 &&
-                <KeyboardButton
-                  classes="shift-symbols"
-                  value={<ShiftIcon />}
-                  onClick={this.handleShiftClick}
-                />
+              <KeyboardButton
+                classes="shift-symbols"
+                value={<ShiftIcon />}
+                onClick={this.handleShiftClick}
+              />
               }
               {row.map((button, ii) =>
                 <KeyboardButton
@@ -248,11 +264,11 @@ export default class Keyboard extends PureComponent {
               )}
 
               {keys.length === i + 1 &&
-                <KeyboardButton
-                  classes="shift-symbols"
-                  value={symbolsKeyValue}
-                  onClick={this.handleSymbolsClick}
-                />
+              <KeyboardButton
+                classes="shift-symbols"
+                value={symbolsKeyValue}
+                onClick={this.handleSymbolsClick}
+              />
               }
             </div>,
           )}
@@ -289,7 +305,7 @@ export default class Keyboard extends PureComponent {
               />
               : null}
             <KeyboardButton
-              value={'↧'}
+              value={'Skjul tastatur'}
               classes="keyboard-submit-button"
               onClick={this.props.hideKeyboard}
             />
