@@ -60,8 +60,7 @@ export default class KeyboardBackspaceButton extends React.Component {
 
   handleClick() {
     if (typeof (this.props.onClick) !== 'undefined') {
-      console.log('HANDLE CLICK')
-      this.props.onClick(this.props.value);
+      // this.props.onClick(this.props.value);
     }
   }
 
