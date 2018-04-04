@@ -42,15 +42,15 @@ class KeyboardedInput extends React.Component {
   }
 
   componentDidMount() {
-    this.input.addEventListener('input', this.handleChange);
+    this.input.addEventListener('input-custom', this.handleChange);
   }
 
   componentWillUnmount() {
-    this.input.removeEventListener('input', this.handleChange);
+    this.input.removeEventListener('input-custom', this.handleChange);
   }
 
   handleChange(event) {
-    this.props.onChange(event.target.value);
+    this.props.onChange(event.target.value, event.type != 'input-custom');
   }
 
   handleFocus() {
